@@ -5,7 +5,6 @@ RUN apt-get update && \
 RUN apt-get install -y swig portaudio19-dev libpulse-dev
 
 RUN pip3 install ovos-stt-http-server
-RUN pip3 install git+https://github.com/abdeladim-s/pyfasterwhisper
 
 COPY . /tmp/ovos-stt-plugin-fasterwhisper
 RUN pip3 install /tmp/ovos-stt-plugin-fasterwhisper
