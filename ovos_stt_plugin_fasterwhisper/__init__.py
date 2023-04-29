@@ -2,8 +2,36 @@
 import numpy
 from faster_whisper import WhisperModel
 from ovos_plugin_manager.templates.stt import STT
+from ovos_plugin_manager.templates.transformers import AudioTransformer
 from ovos_utils.log import LOG
 from speech_recognition import AudioData
+
+
+class FasterWhisperLangClassifier(AudioTransformer):
+    def __init__(self, config=None):
+        config = config or {}
+        super().__init__("fasterwhisper_lang", 10, config)
+        model = self.config.get("model")
+        if not model:
+            model = "small.en"
+        assert model in FasterWhisperSTT.MODELS  # TODO - better error handling
+
+        self.compute_type = self.config.get("compute_type", "int8")
+        self.use_cuda = self.config.get("use_cuda", False)
+        self.beam_size = self.config.get("beam_size", 5)
+
+        if self.use_cuda:
+            device = "cuda"
+        else:
+            device = "cpu"
+        self.engine = WhisperModel(model, device=device, compute_type=self.compute_type)
+
+    # plugin api
+    def transform(self, audio_data):
+        # segments is an iterator, transcription is not done here
+        _, info = self.engine.transcribe(FasterWhisperSTT.audiodata2array(audio_data), beam_size=self.beam_size)
+        LOG.info(f"Detected speech language '{info.language}' with probability {info.language_probability}")
+        return audio_data, {"stt_lang": info.language, "lang_probability": info.language_probability}
 
 
 class FasterWhisperSTT(STT):
@@ -127,7 +155,8 @@ class FasterWhisperSTT(STT):
             device = "cpu"
         self.engine = WhisperModel(model, device=device, compute_type=self.compute_type)
 
-    def audiodata2array(self, audio_data):
+    @staticmethod
+    def audiodata2array(audio_data):
         assert isinstance(audio_data, AudioData)
         # Convert buffer to float32 using NumPy
         audio_as_np_int16 = numpy.frombuffer(audio_data.get_wav_data(), dtype=numpy.int16)
@@ -139,11 +168,8 @@ class FasterWhisperSTT(STT):
         return data
 
     def execute(self, audio, language=None):
-
-        segments, info = self.engine.transcribe(self.audiodata2array(audio), beam_size=self.beam_size)
-
-        LOG.info(f"Detected speech language '{info.language}' with probability {info.language_probability}")
-
+        segments, _ = self.engine.transcribe(self.audiodata2array(audio), beam_size=self.beam_size)
+        # segments is an iterator, transcription only happens here
         transcription = "".join(segment.text for segment in segments).strip()
         return transcription
 
