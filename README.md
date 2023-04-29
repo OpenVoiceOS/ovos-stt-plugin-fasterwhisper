@@ -1,32 +1,28 @@
 ## Description
 
-OpenVoiceOS STT plugin for [fasterwhisper](https://github.com/ggerganov/whisper.cpp)
+OpenVoiceOS STT plugin for [Faster Whisper](https://github.com/guillaumekln/faster-whisper)
 
 High-performance inference of [OpenAI's Whisper](https://github.com/openai/whisper) automatic speech recognition (ASR) model:
-
-- Plain C/C++ implementation without dependencies
-- Apple silicon first-class citizen - optimized via Arm Neon and Accelerate framework
-- AVX intrinsics support for x86 architectures
-- Mixed F16 / F32 precision
-- Low memory usage (Flash Attention + Flash Forward)
-- Zero memory allocations at runtime
-- Runs on the CPU
 
 
 ## Install
 
 `pip install ovos-stt-plugin-fasterwhisper`
 
-
 ## Configuration
 
-available models are `"tiny.en", "tiny", "base.en", "base", "small.en", "small", "medium.en", "medium", "large"`
+available models are `"tiny.en", "tiny", "base.en", "base", "small.en", "small", "medium.en", "medium", "large-v2"`
+
+eg, to use Large model with GPU
 
 ```json
   "stt": {
     "module": "ovos-stt-plugin-fasterwhisper",
     "ovos-stt-plugin-fasterwhisper": {
-        "model": "tiny"
+        "model": "large-v2",
+        "use_cuda": true,
+        "compute_type": "float16",
+        "beam_size": 5
     }
   }
  
@@ -34,24 +30,5 @@ available models are `"tiny.en", "tiny", "base.en", "base", "small.en", "small",
 
 ## Models
 
-Models will be autodownloaded to `~/.local/share/pyfasterwhisper/models/{model_name}` when plugin is loaded
+Models will be auto downloaded by faster whisper on plugin load
 
-
-Memory usage
-
-| Model  | Disk   | Mem     |
-| ---    | ---    | ---     |
-| tiny   |  75 MB | ~280 MB |
-| base   | 142 MB | ~430 MB |
-| small  | 466 MB | ~1.0 GB |
-| medium | 1.5 GB | ~2.6 GB |
-| large  | 2.9 GB | ~4.7 GB |
-
-
-## Docker
-
-This plugin can be used together with [ovos-stt-http-server](https://github.com/OpenVoiceOS/ovos-stt-http-server) 
-
-```bash
-docker run -p 8080:8080 ghcr.io/openvoiceos/whisper-stt-http-server:master
-```
