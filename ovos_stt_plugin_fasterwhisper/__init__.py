@@ -26,10 +26,21 @@ class FasterWhisperLangClassifier(AudioTransformer):
             device = "cpu"
         self.engine = WhisperModel(model, device=device, compute_type=self.compute_type)
 
+    @staticmethod
+    def audiochunk2array(audio_data):
+        # Convert buffer to float32 using NumPy
+        audio_as_np_int16 = numpy.frombuffer(audio_data, dtype=numpy.int16)
+        audio_as_np_float32 = audio_as_np_int16.astype(numpy.float32)
+
+        # Normalise float32 array so that values are between -1.0 and +1.0
+        max_int16 = 2 ** 15
+        data = audio_as_np_float32 / max_int16
+        return data
+
     # plugin api
     def transform(self, audio_data):
         # segments is an iterator, transcription is not done here
-        _, info = self.engine.transcribe(FasterWhisperSTT.audiodata2array(audio_data), beam_size=self.beam_size)
+        _, info = self.engine.transcribe(self.audiochunk2array(audio_data), beam_size=self.beam_size)
         LOG.info(f"Detected speech language '{info.language}' with probability {info.language_probability}")
         return audio_data, {"stt_lang": info.language, "lang_probability": info.language_probability}
 
@@ -158,14 +169,7 @@ class FasterWhisperSTT(STT):
     @staticmethod
     def audiodata2array(audio_data):
         assert isinstance(audio_data, AudioData)
-        # Convert buffer to float32 using NumPy
-        audio_as_np_int16 = numpy.frombuffer(audio_data.get_wav_data(), dtype=numpy.int16)
-        audio_as_np_float32 = audio_as_np_int16.astype(numpy.float32)
-
-        # Normalise float32 array so that values are between -1.0 and +1.0
-        max_int16 = 2 ** 15
-        data = audio_as_np_float32 / max_int16
-        return data
+        return FasterWhisperLangClassifier.audiochunk2array(audio_data.get_wav_data())
 
     def execute(self, audio, language=None):
         segments, _ = self.engine.transcribe(self.audiodata2array(audio), beam_size=self.beam_size)
