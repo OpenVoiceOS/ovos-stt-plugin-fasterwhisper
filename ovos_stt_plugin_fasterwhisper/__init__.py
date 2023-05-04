@@ -10,7 +10,7 @@ from speech_recognition import AudioData
 class FasterWhisperLangClassifier(AudioTransformer):
     def __init__(self, config=None):
         config = config or {}
-        super().__init__("fasterwhisper_lang", 10, config)
+        super().__init__("ovos-audio-transformer-plugin-fasterwhisper", 10, config)
         model = self.config.get("model")
         if not model:
             model = "small.en"

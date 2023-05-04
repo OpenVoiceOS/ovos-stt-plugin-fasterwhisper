@@ -51,7 +51,7 @@ def required(requirements_file):
 
 PLUGIN_ENTRY_POINT = 'ovos-stt-plugin-fasterwhisper = ovos_stt_plugin_fasterwhisper:FasterWhisperSTT'
 CONFIG_ENTRY_POINT = 'ovos-stt-plugin-fasterwhisper.config = ovos_stt_plugin_fasterwhisper:FasterWhisperSTTConfig'
-LANG_PLUGIN_ENTRY_POINT = 'ovos-stt-plugin-fasterwhisper = ovos_stt_plugin_fasterwhisper:FasterWhisperLangClassifier'
+LANG_PLUGIN_ENTRY_POINT = 'ovos-audio-transformer-plugin-fasterwhisper = ovos_stt_plugin_fasterwhisper:FasterWhisperLangClassifier'
 
 
 setup(

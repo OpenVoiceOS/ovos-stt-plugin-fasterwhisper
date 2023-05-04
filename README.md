@@ -15,6 +15,8 @@ available models are `"tiny.en", "tiny", "base.en", "base", "small.en", "small",
 
 eg, to use Large model with GPU
 
+To use Whisper as STT
+
 ```json
   "stt": {
     "module": "ovos-stt-plugin-fasterwhisper",
@@ -26,6 +28,20 @@ eg, to use Large model with GPU
     }
   }
  
+```
+
+To use Whisper for lang detection  (ovos-dinkum-listener only)
+
+
+```json
+  "listener": {
+    "audio_transformers": {
+        "ovos-audio-transformer-plugin-fasterwhisper": {
+            "model": "small"
+        }
+    }
+  }
+
 ```
 
 ## Models
