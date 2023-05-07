@@ -13,7 +13,7 @@ class FasterWhisperLangClassifier(AudioTransformer):
         super().__init__("ovos-audio-transformer-plugin-fasterwhisper", 10, config)
         model = self.config.get("model")
         if not model:
-            model = "small.en"
+            model = "small"
         assert model in FasterWhisperSTT.MODELS  # TODO - better error handling
 
         self.compute_type = self.config.get("compute_type", "int8")
@@ -40,7 +40,8 @@ class FasterWhisperLangClassifier(AudioTransformer):
     # plugin api
     def transform(self, audio_data):
         # segments is an iterator, transcription is not done here
-        _, info = self.engine.transcribe(self.audiochunk2array(audio_data), beam_size=self.beam_size)
+        _, info = self.engine.transcribe(self.audiochunk2array(audio_data), beam_size=self.beam_size,
+                                         condition_on_previous_text=False)
         LOG.info(f"Detected speech language '{info.language}' with probability {info.language_probability}")
         return audio_data, {"stt_lang": info.language, "lang_probability": info.language_probability}
 
@@ -153,7 +154,7 @@ class FasterWhisperSTT(STT):
         super().__init__(*args, **kwargs)
         model = self.config.get("model")
         if not model:
-            model = "small.en"
+            model = "small"
         assert model in self.MODELS  # TODO - better error handling
 
         self.beam_size = self.config.get("beam_size", 5)
@@ -172,7 +173,9 @@ class FasterWhisperSTT(STT):
         return FasterWhisperLangClassifier.audiochunk2array(audio_data.get_wav_data())
 
     def execute(self, audio, language=None):
-        segments, _ = self.engine.transcribe(self.audiodata2array(audio), beam_size=self.beam_size)
+        lang = language or self.lang
+        segments, _ = self.engine.transcribe(self.audiodata2array(audio), beam_size=self.beam_size,
+                                             condition_on_previous_text=False, language=lang.split("-")[0].lower())
         # segments is an iterator, transcription only happens here
         transcription = "".join(segment.text for segment in segments).strip()
         return transcription
