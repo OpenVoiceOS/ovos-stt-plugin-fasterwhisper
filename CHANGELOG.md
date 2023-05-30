@@ -1,5 +1,17 @@
 # Changelog
 
+## [Unreleased](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/HEAD)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/V0.0.1a4...HEAD)
+
+**Implemented enhancements:**
+
+- Add cpu\_threads support [\#2](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/pull/2) ([goldyfruit](https://github.com/goldyfruit))
+
+## [V0.0.1a4](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/V0.0.1a4) (2023-05-07)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/V0.0.1a3...V0.0.1a4)
+
 ## [V0.0.1a3](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/V0.0.1a3) (2023-05-07)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/V0.0.1a2...V0.0.1a3)
