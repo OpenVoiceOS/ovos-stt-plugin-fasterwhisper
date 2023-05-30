@@ -24,10 +24,10 @@ To use Whisper as STT
         "model": "large-v2",
         "use_cuda": true,
         "compute_type": "float16",
-        "beam_size": 5
+        "beam_size": 5,
+        "cpu_threads": 4
     }
   }
- 
 ```
 
 To use Whisper for lang detection  (ovos-dinkum-listener only)
@@ -41,7 +41,6 @@ To use Whisper for lang detection  (ovos-dinkum-listener only)
         }
     }
   }
-
 ```
 
 ## Models

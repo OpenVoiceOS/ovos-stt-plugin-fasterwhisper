@@ -21,6 +21,7 @@ class FasterWhisperLangClassifier(AudioTransformer):
         self.compute_type = self.config.get("compute_type", "int8")
         self.use_cuda = self.config.get("use_cuda", False)
         self.beam_size = self.config.get("beam_size", 5)
+        self.cpu_threads = self.config.get("cpu_threads", 4)
 
         if self.use_cuda:
             device = "cuda"
@@ -187,12 +188,13 @@ class FasterWhisperSTT(STT):
         self.beam_size = self.config.get("beam_size", 5)
         self.compute_type = self.config.get("compute_type", "int8")
         self.use_cuda = self.config.get("use_cuda", False)
+        self.cpu_threads = self.config.get("cpu_threads", 4)
 
         if self.use_cuda:
             device = "cuda"
         else:
             device = "cpu"
-        self.engine = WhisperModel(model, device=device, compute_type=self.compute_type)
+        self.engine = WhisperModel(model, device=device, compute_type=self.compute_type, cpu_threads=self.cpu_threads)
 
     @staticmethod
     def audiodata2array(audio_data):
