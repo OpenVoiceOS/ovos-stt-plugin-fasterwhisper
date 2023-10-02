@@ -189,7 +189,7 @@ class FasterWhisperSTT(STT):
         self.compute_type = self.config.get("compute_type", "int8")
         self.use_cuda = self.config.get("use_cuda", False)
         self.cpu_threads = self.config.get("cpu_threads", 4)
-
+        self.vad_filter = self.config.get("vad_filter", False)
         if self.use_cuda:
             device = "cuda"
         else:
@@ -203,8 +203,11 @@ class FasterWhisperSTT(STT):
 
     def execute(self, audio, language=None):
         lang = language or self.lang
-        segments, _ = self.engine.transcribe(self.audiodata2array(audio), beam_size=self.beam_size,
-                                             condition_on_previous_text=False, language=lang.split("-")[0].lower())
+        segments, _ = self.engine.transcribe(self.audiodata2array(audio),
+                                             beam_size=self.beam_size,
+                                             vad_filter=self.vad_filter,
+                                             condition_on_previous_text=False,
+                                             language=lang.split("-")[0].lower())
         # segments is an iterator, transcription only happens here
         transcription = "".join(segment.text for segment in segments).strip()
         return transcription
