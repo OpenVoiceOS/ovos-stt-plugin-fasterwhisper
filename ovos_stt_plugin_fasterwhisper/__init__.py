@@ -2,6 +2,8 @@
 import numpy as np
 from faster_whisper import WhisperModel, decode_audio
 from ovos_bus_client.session import SessionManager
+from ovos_config.config import Configuration
+from ovos_config.locale import get_default_lang
 from ovos_plugin_manager.templates.stt import STT
 from ovos_plugin_manager.templates.transformers import AudioTransformer
 from ovos_utils.log import LOG
@@ -29,6 +31,11 @@ class FasterWhisperLangClassifier(AudioTransformer):
             device = "cpu"
         self.engine = WhisperModel(model, device=device, compute_type=self.compute_type)
 
+    @property
+    def valid_langs(self) -> List[str]:
+        return list(set([get_default_lang()] +
+                        Configuration().get("secondary_langs", [])))
+
     @staticmethod
     def audiochunk2array(audio_data):
         # Convert buffer to float32 using NumPy
@@ -41,10 +48,8 @@ class FasterWhisperLangClassifier(AudioTransformer):
         return data
 
     def detect(self, audio, valid_langs=None):
-        if not valid_langs:
-            s = SessionManager.get()
-            valid_langs = s.valid_languages
-        valid_langs = [l.lower().split("-")[0] for l in valid_langs]
+        valid_langs = [l.lower().split("-")[0]
+                       for l in valid_langs or self.valid_langs]
 
         if not self.engine.model.is_multilingual:
             language = "en"
