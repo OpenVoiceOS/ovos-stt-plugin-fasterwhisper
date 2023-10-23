@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/HEAD)
 
-[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/V0.0.1a4...HEAD)
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/V0.0.1a5...HEAD)
+
+**Fixed bugs:**
+
+- fix/lang\_list [\#6](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/pull/6) ([JarbasAl](https://github.com/JarbasAl))
+
+## [V0.0.1a5](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/V0.0.1a5) (2023-05-30)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/V0.0.1a4...V0.0.1a5)
 
 **Implemented enhancements:**
 
