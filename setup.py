@@ -85,5 +85,9 @@ setup(
     keywords='mycroft ovos plugin stt',
     entry_points={'mycroft.plugin.stt': PLUGIN_ENTRY_POINT,
                   'mycroft.plugin.stt.config': CONFIG_ENTRY_POINT,
-                  'neon.plugin.audio': LANG_PLUGIN_ENTRY_POINT}
+                  'neon.plugin.audio': LANG_PLUGIN_ENTRY_POINT,
+                  'console_scripts': [
+                      'fw-transcribe=ovos_stt_plugin_fasterwhisper.transcribe:transcribe'
+                  ]
+                  }
 )
