@@ -34,8 +34,9 @@ class FasterWhisperLangClassifier(AudioTransformer):
 
     @property
     def valid_langs(self) -> List[str]:
-        return list(set([get_default_lang()] +
-                        Configuration().get("secondary_langs", [])))
+        return list(
+            set([get_default_lang()] + Configuration().get("secondary_langs", []))
+        )
 
     @staticmethod
     def audiochunk2array(audio_data):
@@ -44,13 +45,12 @@ class FasterWhisperLangClassifier(AudioTransformer):
         audio_as_np_float32 = audio_as_np_int16.astype(np.float32)
 
         # Normalise float32 array so that values are between -1.0 and +1.0
-        max_int16 = 2 ** 15
+        max_int16 = 2**15
         data = audio_as_np_float32 / max_int16
         return data
 
     def detect(self, audio, valid_langs=None):
-        valid_langs = [l.lower().split("-")[0]
-                       for l in valid_langs or self.valid_langs]
+        valid_langs = [l.lower().split("-")[0] for l in valid_langs or self.valid_langs]
 
         if not self.engine.model.is_multilingual:
             language = "en"
@@ -68,7 +68,9 @@ class FasterWhisperLangClassifier(AudioTransformer):
             results = self.engine.model.detect_language(encoder_output)[0]
             results = [(l[2:-2], p) for l, p in results if l[2:-2] in valid_langs]
             total = sum(l[1] for l in results) or 1
-            results = sorted([(l, p / total) for l, p in results], key=lambda k: k[1], reverse=True)
+            results = sorted(
+                [(l, p / total) for l, p in results], key=lambda k: k[1], reverse=True
+            )
 
             language, language_probability = results[0]
         return language, language_probability
@@ -81,7 +83,19 @@ class FasterWhisperLangClassifier(AudioTransformer):
 
 
 class FasterWhisperSTT(STT):
-    MODELS = ("tiny.en", "tiny", "base.en", "base", "small.en", "small", "medium.en", "medium", "large", "large-v2")
+    MODELS = (
+        "tiny.en",
+        "tiny",
+        "base.en",
+        "base",
+        "small.en",
+        "small",
+        "medium.en",
+        "medium",
+        "large",
+        "large-v2",
+        "large-v3",
+    )
     LANGUAGES = {
         "en": "english",
         "zh": "chinese",
@@ -200,7 +214,12 @@ class FasterWhisperSTT(STT):
             device = "cuda"
         else:
             device = "cpu"
-        self.engine = WhisperModel(model, device=device, compute_type=self.compute_type, cpu_threads=self.cpu_threads)
+        self.engine = WhisperModel(
+            model,
+            device=device,
+            compute_type=self.compute_type,
+            cpu_threads=self.cpu_threads,
+        )
 
     @staticmethod
     def audiodata2array(audio_data):
@@ -209,8 +228,12 @@ class FasterWhisperSTT(STT):
 
     def execute(self, audio, language=None):
         lang = language or self.lang
-        segments, _ = self.engine.transcribe(self.audiodata2array(audio), beam_size=self.beam_size,
-                                             condition_on_previous_text=False, language=lang.split("-")[0].lower())
+        segments, _ = self.engine.transcribe(
+            self.audiodata2array(audio),
+            beam_size=self.beam_size,
+            condition_on_previous_text=False,
+            language=lang.split("-")[0].lower(),
+        )
         # segments is an iterator, transcription only happens here
         transcription = "".join(segment.text for segment in segments).strip()
         return transcription
@@ -221,28 +244,35 @@ class FasterWhisperSTT(STT):
 
 
 FasterWhisperSTTConfig = {
-    lang: [{"model": "tiny",
+    lang: [
+        {
+            "model": "tiny",
             "lang": lang,
             "meta": {
                 "priority": 50,
                 "display_name": f"FasterWhisper (Tiny)",
-                "offline": True}
+                "offline": True,
             },
-           {"model": "base",
+        },
+        {
+            "model": "base",
             "lang": lang,
             "meta": {
                 "priority": 55,
                 "display_name": f"FasterWhisper (Base)",
-                "offline": True}
+                "offline": True,
             },
-           {"model": "small",
+        },
+        {
+            "model": "small",
             "lang": lang,
             "meta": {
                 "priority": 60,
                 "display_name": f"FasterWhisper (Small)",
-                "offline": True}
-            }
-           ]
+                "offline": True,
+            },
+        },
+    ]
     for lang, lang_name in FasterWhisperSTT.LANGUAGES.items()
 }
 
