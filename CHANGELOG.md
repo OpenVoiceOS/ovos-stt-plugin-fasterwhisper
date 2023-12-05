@@ -1,5 +1,17 @@
 # Changelog
 
+## [Unreleased](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/HEAD)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/V0.0.1a7...HEAD)
+
+**Implemented enhancements:**
+
+- Add large-v3 [\#7](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/pull/7) ([goldyfruit](https://github.com/goldyfruit))
+
+## [V0.0.1a7](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/V0.0.1a7) (2023-10-23)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/V0.0.1a6...V0.0.1a7)
+
 ## [V0.0.1a6](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/V0.0.1a6) (2023-10-23)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/V0.0.1a5...V0.0.1a6)
