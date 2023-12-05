@@ -11,7 +11,7 @@ High-performance inference of [OpenAI's Whisper](https://github.com/openai/whisp
 
 ## Configuration
 
-available models are `"tiny.en", "tiny", "base.en", "base", "small.en", "small", "medium.en", "medium", "large-v2"`
+available models are `"tiny.en", "tiny", "base.en", "base", "small.en", "small", "medium.en", "medium", "large-v2", "large-v3"`
 
 eg, to use Large model with GPU
 
@@ -21,7 +21,7 @@ To use Whisper as STT
   "stt": {
     "module": "ovos-stt-plugin-fasterwhisper",
     "ovos-stt-plugin-fasterwhisper": {
-        "model": "large-v2",
+        "model": "large-v3",
         "use_cuda": true,
         "compute_type": "float16",
         "beam_size": 5,
@@ -30,7 +30,7 @@ To use Whisper as STT
   }
 ```
 
-To use Whisper for lang detection  (ovos-dinkum-listener only)
+To use Whisper for lang detection (ovos-dinkum-listener only)
 
 
 ```json
