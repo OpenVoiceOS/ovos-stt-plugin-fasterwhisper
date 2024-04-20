@@ -1,17 +1,11 @@
-# this is needed to read the WAV file properly
-from typing import List
-
 import numpy as np
 from faster_whisper import WhisperModel, decode_audio
-from ovos_config.config import Configuration
-from ovos_config.locale import get_default_lang
 from ovos_plugin_manager.templates.stt import STT
-from ovos_plugin_manager.templates.transformers import AudioTransformer
-from ovos_utils.log import LOG
+from ovos_plugin_manager.templates.transformers import AudioLanguageDetector
 from speech_recognition import AudioData
 
 
-class FasterWhisperLangClassifier(AudioTransformer):
+class FasterWhisperLangClassifier(AudioLanguageDetector):
     def __init__(self, config=None):
         config = config or {}
         super().__init__("ovos-audio-transformer-plugin-fasterwhisper", 10, config)
@@ -32,14 +26,8 @@ class FasterWhisperLangClassifier(AudioTransformer):
             device = "cpu"
         self.engine = WhisperModel(model, device=device, compute_type=self.compute_type)
 
-    @property
-    def valid_langs(self) -> List[str]:
-        return list(
-            set([get_default_lang()] + Configuration().get("secondary_langs", []))
-        )
-
     @staticmethod
-    def audiochunk2array(audio_data):
+    def audiochunk2array(audio_data: bytes):
         # Convert buffer to float32 using NumPy
         audio_as_np_int16 = np.frombuffer(audio_data, dtype=np.int16)
         audio_as_np_float32 = audio_as_np_int16.astype(np.float32)
@@ -49,9 +37,11 @@ class FasterWhisperLangClassifier(AudioTransformer):
         data = audio_as_np_float32 / max_int16
         return data
 
-    def detect(self, audio, valid_langs=None):
+    def detect(self, audio_data: bytes, valid_langs=None):
+        if isinstance(audio_data, AudioData):
+            audio_data = audio_data.get_wav_data()
         valid_langs = [l.lower().split("-")[0] for l in valid_langs or self.valid_langs]
-
+        audio = self.audiochunk2array(audio_data)
         if not self.engine.model.is_multilingual:
             language = "en"
             language_probability = 1
@@ -74,12 +64,6 @@ class FasterWhisperLangClassifier(AudioTransformer):
 
             language, language_probability = results[0]
         return language, language_probability
-
-    # plugin api
-    def transform(self, audio_data):
-        lang, prob = self.detect(self.audiochunk2array(audio_data))
-        LOG.info(f"Detected speech language '{lang}' with probability {prob}")
-        return audio_data, {"stt_lang": lang, "lang_probability": prob}
 
 
 class FasterWhisperSTT(STT):
@@ -288,3 +272,7 @@ if __name__ == "__main__":
     # 2023-04-29 17:42:30.769 - OVOS - __main__:execute:145 - INFO - Detected speech language 'en' with probability 1
     print(a)
     # And so, my fellow Americans, ask not what your country can do for you. Ask what you can do for your country.
+
+    l = FasterWhisperLangClassifier()
+    lang, prob = l.detect(audio.get_wav_data())
+    print(lang, prob)
