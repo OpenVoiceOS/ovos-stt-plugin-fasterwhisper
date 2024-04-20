@@ -38,6 +38,8 @@ class FasterWhisperLangClassifier(AudioLanguageDetector):
         return data
 
     def detect(self, audio_data: bytes, valid_langs=None):
+        if isinstance(audio_data, AudioData):
+            audio_data = audio_data.get_wav_data()
         valid_langs = [l.lower().split("-")[0] for l in valid_langs or self.valid_langs]
         audio = self.audiochunk2array(audio_data)
         if not self.engine.model.is_multilingual:
