@@ -1,19 +1,19 @@
 import numpy as np
-from faster_whisper import WhisperModel, decode_audio
+from faster_whisper import WhisperModel, decode_audio, available_models
 from ovos_plugin_manager.templates.stt import STT
 from ovos_plugin_manager.templates.transformers import AudioLanguageDetector
 from speech_recognition import AudioData
-
+from ovos_utils.log import LOG
 
 class FasterWhisperLangClassifier(AudioLanguageDetector):
     def __init__(self, config=None):
         config = config or {}
         super().__init__("ovos-audio-transformer-plugin-fasterwhisper", 10, config)
         model = self.config.get("model")
-        if not model:
+        valid_model = model in FasterWhisperSTT.MODELS
+        if not model or not valid_model:
+            LOG.warning(f"{model} is not a valid model ({FasterWhisperSTT.MODELS}), using 'small' instead")
             model = "small"
-
-        assert model in FasterWhisperSTT.MODELS  # TODO - better error handling
 
         self.compute_type = self.config.get("compute_type", "int8")
         self.use_cuda = self.config.get("use_cuda", False)
@@ -67,19 +67,7 @@ class FasterWhisperLangClassifier(AudioLanguageDetector):
 
 
 class FasterWhisperSTT(STT):
-    MODELS = (
-        "tiny.en",
-        "tiny",
-        "base.en",
-        "base",
-        "small.en",
-        "small",
-        "medium.en",
-        "medium",
-        "large",
-        "large-v2",
-        "large-v3",
-    )
+    MODELS = available_models()
     LANGUAGES = {
         "en": "english",
         "zh": "chinese",
@@ -185,9 +173,10 @@ class FasterWhisperSTT(STT):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         model = self.config.get("model")
-        if not model:
+        valid_model = model in FasterWhisperSTT.MODELS
+        if not model or not valid_model:
+            LOG.warning(f"{model} is not a valid model ({FasterWhisperSTT.MODELS}), using 'small' instead")
             model = "small"
-        assert model in self.MODELS  # TODO - better error handling
 
         self.beam_size = self.config.get("beam_size", 5)
         self.compute_type = self.config.get("compute_type", "int8")
@@ -234,7 +223,7 @@ FasterWhisperSTTConfig = {
             "lang": lang,
             "meta": {
                 "priority": 50,
-                "display_name": f"FasterWhisper (Tiny)",
+                "display_name": "FasterWhisper (Tiny)",
                 "offline": True,
             },
         },
@@ -262,6 +251,7 @@ FasterWhisperSTTConfig = {
 
 if __name__ == "__main__":
     b = FasterWhisperSTT()
+
     from speech_recognition import Recognizer, AudioFile
 
     jfk = "/home/miro/PycharmProjects/ovos-stt-plugin-fasterwhisper/jfk.wav"
