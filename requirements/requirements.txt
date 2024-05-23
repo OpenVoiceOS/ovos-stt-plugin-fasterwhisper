@@ -1,5 +1,4 @@
 ovos-plugin-manager~=0.0, >=0.0.26a15
 requests
 SpeechRecognition>=3.8.1
-# faster-whisper @ git+https://github.com/SYSTRAN/faster-whisper@master
 faster-whisper>=0.10.0
