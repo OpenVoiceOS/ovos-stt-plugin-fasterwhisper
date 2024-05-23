@@ -14,6 +14,7 @@ class FasterWhisperLangClassifier(AudioLanguageDetector):
         if not model or not valid_model:
             LOG.warning(f"{model} is not a valid model ({FasterWhisperSTT.MODELS}), using 'small' instead")
             model = "small"
+            self.config["model"] = "small"
 
         self.compute_type = self.config.get("compute_type", "int8")
         self.use_cuda = self.config.get("use_cuda", False)
@@ -177,6 +178,7 @@ class FasterWhisperSTT(STT):
         if not model or not valid_model:
             LOG.warning(f"{model} is not a valid model ({FasterWhisperSTT.MODELS}), using 'small' instead")
             model = "small"
+            self.config["model"] = "small"
 
         self.beam_size = self.config.get("beam_size", 5)
         self.compute_type = self.config.get("compute_type", "int8")
