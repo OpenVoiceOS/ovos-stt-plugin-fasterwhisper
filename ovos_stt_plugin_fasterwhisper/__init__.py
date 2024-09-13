@@ -2,19 +2,19 @@ import numpy as np
 from faster_whisper import WhisperModel, decode_audio, available_models
 from ovos_plugin_manager.templates.stt import STT
 from ovos_plugin_manager.templates.transformers import AudioLanguageDetector
-from speech_recognition import AudioData
 from ovos_utils.log import LOG
+from speech_recognition import AudioData
+
 
 class FasterWhisperLangClassifier(AudioLanguageDetector):
     def __init__(self, config=None):
         config = config or {}
         super().__init__("ovos-audio-transformer-plugin-fasterwhisper", 10, config)
-        model = self.config.get("model")
+        model = self.config.get("model") or "small"
         valid_model = model in FasterWhisperSTT.MODELS
-        if not model or not valid_model:
-            LOG.warning(f"{model} is not a valid model ({FasterWhisperSTT.MODELS}), using 'small' instead")
-            model = "small"
-            self.config["model"] = "small"
+        if not valid_model:
+            LOG.info(f"{model} is not default model_id ({FasterWhisperSTT.MODELS}), "
+                     f"assuming huggingface repo_id or path to local model")
 
         self.compute_type = self.config.get("compute_type", "int8")
         self.use_cuda = self.config.get("use_cuda", False)
@@ -34,7 +34,7 @@ class FasterWhisperLangClassifier(AudioLanguageDetector):
         audio_as_np_float32 = audio_as_np_int16.astype(np.float32)
 
         # Normalise float32 array so that values are between -1.0 and +1.0
-        max_int16 = 2**15
+        max_int16 = 2 ** 15
         data = audio_as_np_float32 / max_int16
         return data
 
@@ -173,12 +173,11 @@ class FasterWhisperSTT(STT):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        model = self.config.get("model")
+        model = self.config.get("model") or "small"
         valid_model = model in FasterWhisperSTT.MODELS
-        if not model or not valid_model:
-            LOG.warning(f"{model} is not a valid model ({FasterWhisperSTT.MODELS}), using 'small' instead")
-            model = "small"
-            self.config["model"] = "small"
+        if not valid_model:
+            LOG.info(f"{model} is not default model_id ({FasterWhisperSTT.MODELS}), "
+                     f"assuming huggingface repo_id or path to local model")
 
         self.beam_size = self.config.get("beam_size", 5)
         self.compute_type = self.config.get("compute_type", "int8")
@@ -252,19 +251,20 @@ FasterWhisperSTTConfig = {
 }
 
 if __name__ == "__main__":
-    b = FasterWhisperSTT()
+    b = FasterWhisperSTT(config={"model": "projecte-aina/faster-whisper-large-v3-ca-3catparla"})
 
     from speech_recognition import Recognizer, AudioFile
 
-    jfk = "/home/miro/PycharmProjects/ovos-stt-plugin-fasterwhisper/jfk.wav"
+    jfk = "/home/miro/PycharmProjects/ovos-stt-plugin-vosk/example.wav"
     with AudioFile(jfk) as source:
         audio = Recognizer().record(source)
 
-    a = b.execute(audio, language="en")
-    # 2023-04-29 17:42:30.769 - OVOS - __main__:execute:145 - INFO - Detected speech language 'en' with probability 1
+    a = b.execute(audio, language="ca")
     print(a)
     # And so, my fellow Americans, ask not what your country can do for you. Ask what you can do for your country.
 
     l = FasterWhisperLangClassifier()
-    lang, prob = l.detect(audio.get_wav_data())
+    lang, prob = l.detect(audio.get_wav_data(),
+                          valid_langs=["pt", "es", "ca", "gl"])
     print(lang, prob)
+    # es 0.7143379217828251
