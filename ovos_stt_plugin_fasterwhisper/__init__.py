@@ -1,24 +1,24 @@
-# this is needed to read the WAV file properly
-import numpy
-from faster_whisper import WhisperModel
+import numpy as np
+from faster_whisper import WhisperModel, decode_audio
 from ovos_plugin_manager.templates.stt import STT
-from ovos_plugin_manager.templates.transformers import AudioTransformer
-from ovos_utils.log import LOG
+from ovos_plugin_manager.templates.transformers import AudioLanguageDetector
 from speech_recognition import AudioData
 
 
-class FasterWhisperLangClassifier(AudioTransformer):
+class FasterWhisperLangClassifier(AudioLanguageDetector):
     def __init__(self, config=None):
         config = config or {}
-        super().__init__("fasterwhisper_lang", 10, config)
+        super().__init__("ovos-audio-transformer-plugin-fasterwhisper", 10, config)
         model = self.config.get("model")
         if not model:
-            model = "small.en"
+            model = "small"
+
         assert model in FasterWhisperSTT.MODELS  # TODO - better error handling
 
         self.compute_type = self.config.get("compute_type", "int8")
         self.use_cuda = self.config.get("use_cuda", False)
         self.beam_size = self.config.get("beam_size", 5)
+        self.cpu_threads = self.config.get("cpu_threads", 4)
 
         if self.use_cuda:
             device = "cuda"
@@ -26,16 +26,60 @@ class FasterWhisperLangClassifier(AudioTransformer):
             device = "cpu"
         self.engine = WhisperModel(model, device=device, compute_type=self.compute_type)
 
-    # plugin api
-    def transform(self, audio_data):
-        # segments is an iterator, transcription is not done here
-        _, info = self.engine.transcribe(FasterWhisperSTT.audiodata2array(audio_data), beam_size=self.beam_size)
-        LOG.info(f"Detected speech language '{info.language}' with probability {info.language_probability}")
-        return audio_data, {"stt_lang": info.language, "lang_probability": info.language_probability}
+    @staticmethod
+    def audiochunk2array(audio_data: bytes):
+        # Convert buffer to float32 using NumPy
+        audio_as_np_int16 = np.frombuffer(audio_data, dtype=np.int16)
+        audio_as_np_float32 = audio_as_np_int16.astype(np.float32)
+
+        # Normalise float32 array so that values are between -1.0 and +1.0
+        max_int16 = 2**15
+        data = audio_as_np_float32 / max_int16
+        return data
+
+    def detect(self, audio_data: bytes, valid_langs=None):
+        if isinstance(audio_data, AudioData):
+            audio_data = audio_data.get_wav_data()
+        valid_langs = [l.lower().split("-")[0] for l in valid_langs or self.valid_langs]
+        audio = self.audiochunk2array(audio_data)
+        if not self.engine.model.is_multilingual:
+            language = "en"
+            language_probability = 1
+        else:
+            sampling_rate = self.engine.feature_extractor.sampling_rate
+
+            if not isinstance(audio, np.ndarray):
+                audio = decode_audio(audio, sampling_rate=sampling_rate)
+
+            features = self.engine.feature_extractor(audio)
+
+            segment = features[:, : self.engine.feature_extractor.nb_max_frames]
+            encoder_output = self.engine.encode(segment)
+            results = self.engine.model.detect_language(encoder_output)[0]
+            results = [(l[2:-2], p) for l, p in results if l[2:-2] in valid_langs]
+            total = sum(l[1] for l in results) or 1
+            results = sorted(
+                [(l, p / total) for l, p in results], key=lambda k: k[1], reverse=True
+            )
+
+            language, language_probability = results[0]
+        return language, language_probability
 
 
 class FasterWhisperSTT(STT):
-    MODELS = ("tiny.en", "tiny", "base.en", "base", "small.en", "small", "medium.en", "medium", "large", "large-v2")
+    MODELS = (
+        "tiny.en",
+        "tiny",
+        "base.en",
+        "base",
+        "small.en",
+        "small",
+        "medium.en",
+        "medium",
+        "large",
+        "large-v2",
+        "large-v3",
+    )
     LANGUAGES = {
         "en": "english",
         "zh": "chinese",
@@ -142,33 +186,38 @@ class FasterWhisperSTT(STT):
         super().__init__(*args, **kwargs)
         model = self.config.get("model")
         if not model:
-            model = "small.en"
+            model = "small"
         assert model in self.MODELS  # TODO - better error handling
 
         self.beam_size = self.config.get("beam_size", 5)
         self.compute_type = self.config.get("compute_type", "int8")
         self.use_cuda = self.config.get("use_cuda", False)
+        self.cpu_threads = self.config.get("cpu_threads", 4)
 
         if self.use_cuda:
             device = "cuda"
         else:
             device = "cpu"
-        self.engine = WhisperModel(model, device=device, compute_type=self.compute_type)
+        self.engine = WhisperModel(
+            model,
+            device=device,
+            compute_type=self.compute_type,
+            cpu_threads=self.cpu_threads,
+        )
 
     @staticmethod
     def audiodata2array(audio_data):
         assert isinstance(audio_data, AudioData)
-        # Convert buffer to float32 using NumPy
-        audio_as_np_int16 = numpy.frombuffer(audio_data.get_wav_data(), dtype=numpy.int16)
-        audio_as_np_float32 = audio_as_np_int16.astype(numpy.float32)
-
-        # Normalise float32 array so that values are between -1.0 and +1.0
-        max_int16 = 2 ** 15
-        data = audio_as_np_float32 / max_int16
-        return data
+        return FasterWhisperLangClassifier.audiochunk2array(audio_data.get_wav_data())
 
     def execute(self, audio, language=None):
-        segments, _ = self.engine.transcribe(self.audiodata2array(audio), beam_size=self.beam_size)
+        lang = language or self.lang
+        segments, _ = self.engine.transcribe(
+            self.audiodata2array(audio),
+            beam_size=self.beam_size,
+            condition_on_previous_text=False,
+            language=lang.split("-")[0].lower(),
+        )
         # segments is an iterator, transcription only happens here
         transcription = "".join(segment.text for segment in segments).strip()
         return transcription
@@ -179,28 +228,35 @@ class FasterWhisperSTT(STT):
 
 
 FasterWhisperSTTConfig = {
-    lang: [{"model": "tiny",
+    lang: [
+        {
+            "model": "tiny",
             "lang": lang,
             "meta": {
                 "priority": 50,
                 "display_name": f"FasterWhisper (Tiny)",
-                "offline": True}
+                "offline": True,
             },
-           {"model": "base",
+        },
+        {
+            "model": "base",
             "lang": lang,
             "meta": {
                 "priority": 55,
                 "display_name": f"FasterWhisper (Base)",
-                "offline": True}
+                "offline": True,
             },
-           {"model": "small",
+        },
+        {
+            "model": "small",
             "lang": lang,
             "meta": {
                 "priority": 60,
                 "display_name": f"FasterWhisper (Small)",
-                "offline": True}
-            }
-           ]
+                "offline": True,
+            },
+        },
+    ]
     for lang, lang_name in FasterWhisperSTT.LANGUAGES.items()
 }
 
@@ -216,3 +272,7 @@ if __name__ == "__main__":
     # 2023-04-29 17:42:30.769 - OVOS - __main__:execute:145 - INFO - Detected speech language 'en' with probability 1
     print(a)
     # And so, my fellow Americans, ask not what your country can do for you. Ask what you can do for your country.
+
+    l = FasterWhisperLangClassifier()
+    lang, prob = l.detect(audio.get_wav_data())
+    print(lang, prob)

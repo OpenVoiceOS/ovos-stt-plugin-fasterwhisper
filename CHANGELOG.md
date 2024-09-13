@@ -1,12 +1,64 @@
 # Changelog
 
-## [V0.0.0a2](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/V0.0.0a2) (2023-04-29)
+## [0.0.1a11](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/0.0.1a11) (2024-09-13)
 
-[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/V0.0.0a1...V0.0.0a2)
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/V0.0.1a10...0.0.1a11)
 
-## [V0.0.0a1](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/V0.0.0a1) (2023-04-29)
+**Merged pull requests:**
 
-[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/5356f4d38ac44eb0ee89cc304a04791d30cc5508...V0.0.0a1)
+- feat:semver [\#10](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/pull/10) ([JarbasAl](https://github.com/JarbasAl))
+
+## [V0.0.1a10](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/V0.0.1a10) (2024-04-20)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/V0.0.1a9...V0.0.1a10)
+
+**Implemented enhancements:**
+
+- feat/lang\_detection\_plugin [\#8](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/pull/8) ([JarbasAl](https://github.com/JarbasAl))
+
+## [V0.0.1a9](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/V0.0.1a9) (2024-04-20)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/V0.0.1a8...V0.0.1a9)
+
+## [V0.0.1a8](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/V0.0.1a8) (2023-12-05)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/V0.0.1a7...V0.0.1a8)
+
+**Implemented enhancements:**
+
+- Add large-v3 [\#7](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/pull/7) ([goldyfruit](https://github.com/goldyfruit))
+
+## [V0.0.1a7](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/V0.0.1a7) (2023-10-23)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/V0.0.1a6...V0.0.1a7)
+
+## [V0.0.1a6](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/V0.0.1a6) (2023-10-23)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/V0.0.1a5...V0.0.1a6)
+
+## [V0.0.1a5](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/V0.0.1a5) (2023-05-30)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/V0.0.1a4...V0.0.1a5)
+
+**Implemented enhancements:**
+
+- Add cpu\_threads support [\#2](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/pull/2) ([goldyfruit](https://github.com/goldyfruit))
+
+## [V0.0.1a4](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/V0.0.1a4) (2023-05-07)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/V0.0.1a3...V0.0.1a4)
+
+## [V0.0.1a3](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/V0.0.1a3) (2023-05-07)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/V0.0.1a2...V0.0.1a3)
+
+## [V0.0.1a2](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/V0.0.1a2) (2023-05-04)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/V0.0.1a1...V0.0.1a2)
+
+## [V0.0.1a1](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/V0.0.1a1) (2023-05-04)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/V0.0.0...V0.0.1a1)
 
 
 
