@@ -173,12 +173,11 @@ class FasterWhisperSTT(STT):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        model = self.config.get("model")
+        model = self.config.get("model") or "small"
         valid_model = model in FasterWhisperSTT.MODELS
-        if not model or not valid_model:
-            LOG.warning(f"{model} is not a valid model ({FasterWhisperSTT.MODELS}), using 'small' instead")
-            model = "small"
-            self.config["model"] = "small"
+        if not valid_model:
+            LOG.info(f"{model} is not default model_id ({FasterWhisperSTT.MODELS}), "
+                     f"assuming huggingface repo_id or path to local model file")
 
         self.beam_size = self.config.get("beam_size", 5)
         self.compute_type = self.config.get("compute_type", "int8")
