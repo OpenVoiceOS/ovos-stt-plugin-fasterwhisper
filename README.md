@@ -31,12 +31,12 @@ To use Whisper for lang detection (ovos-dinkum-listener only)
 
 ```json
   "listener": {
-"audio_transformers": {
-"ovos-audio-transformer-plugin-fasterwhisper": {
-"model": "small"
-}
-}
-}
+    "audio_transformers": {
+        "ovos-audio-transformer-plugin-fasterwhisper": {
+            "model": "small"
+        }
+    }
+  }
 ```
 
 ## Models
