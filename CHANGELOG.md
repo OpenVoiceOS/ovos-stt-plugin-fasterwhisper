@@ -1,16 +1,12 @@
 # Changelog
 
-## [0.1.0a1](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/0.1.0a1) (2024-09-13)
+## [0.1.1a1](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/0.1.1a1) (2024-10-04)
 
-[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/0.0.1...0.1.0a1)
-
-**Implemented enhancements:**
-
-- feat: models from upstream plugin [\#9](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/pull/9) ([mikejgray](https://github.com/mikejgray))
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/0.1.0...0.1.1a1)
 
 **Merged pull requests:**
 
-- feat:finetuned models [\#12](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/pull/12) ([JarbasAl](https://github.com/JarbasAl))
+- default to faster whisper V3 turbo [\#15](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/pull/15) ([JarbasAl](https://github.com/JarbasAl))
 
 
 
