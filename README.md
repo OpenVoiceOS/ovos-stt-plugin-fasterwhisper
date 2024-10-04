@@ -47,7 +47,3 @@ To use Whisper for lang detection (ovos-dinkum-listener only)
   }
 ```
 
-## Models
-
-Models will be auto downloaded by faster whisper on plugin load
-

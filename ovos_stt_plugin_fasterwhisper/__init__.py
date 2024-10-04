@@ -173,11 +173,14 @@ class FasterWhisperSTT(STT):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        model = self.config.get("model") or "small"
-        valid_model = model in FasterWhisperSTT.MODELS
-        if not valid_model:
-            LOG.info(f"{model} is not default model_id ({FasterWhisperSTT.MODELS}), "
-                     f"assuming huggingface repo_id or path to local model")
+        model = self.config.get("model") or "whisper-large-v3-turbo"
+        if model == "whisper-large-v3-turbo":
+            model = "deepdml/faster-whisper-large-v3-turbo-ct2"
+        else:
+            valid_model = model in FasterWhisperSTT.MODELS
+            if not valid_model:
+                LOG.info(f"{model} is not default model_id ({FasterWhisperSTT.MODELS}), "
+                         f"assuming huggingface repo_id or path to local model")
 
         self.beam_size = self.config.get("beam_size", 5)
         self.compute_type = self.config.get("compute_type", "int8")
@@ -207,6 +210,7 @@ class FasterWhisperSTT(STT):
             beam_size=self.beam_size,
             condition_on_previous_text=False,
             language=lang.split("-")[0].lower(),
+            vad_filter = self.config.get("vad_filter", False)
         )
         # segments is an iterator, transcription only happens here
         transcription = "".join(segment.text for segment in segments).strip()
