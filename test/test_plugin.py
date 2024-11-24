@@ -36,7 +36,7 @@ def test_faster_whisper_lang_classifier_detect(audio_data):
 
 def test_faster_whisper_lang_classifier_audiochunk2array():
     audio_data = b"\x00\x01\x02\x03"
-    array = FasterWhisperLangClassifier.audiochunk2array(audio_data)
+    array = FasterWhisperSTT.audiochunk2array(audio_data)
     assert isinstance(array, np.ndarray)
     assert array.dtype == np.float32
 
