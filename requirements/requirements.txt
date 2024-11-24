@@ -1,4 +1,4 @@
-ovos-plugin-manager~=0.0, >=0.0.26a15
-requests
+ovos-plugin-manager>=0.7.0,<1.0.0
 SpeechRecognition>=3.8.1
 faster-whisper>=0.10.0
+requests
