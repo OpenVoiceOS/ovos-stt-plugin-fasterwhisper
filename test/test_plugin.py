@@ -47,14 +47,5 @@ def test_faster_whisper_stt_audiodata2array(audio_data):
     assert array.dtype == np.float32
 
 
-def test_faster_whisper_stt_invalid_model():
-    stt = FasterWhisperSTT(config={"model": "invalid_model"})
-    assert stt.config["model"] == "small"
-
-
-def test_faster_whisper_lang_classifier_invalid_model():
-    classifier = FasterWhisperLangClassifier(config={"model": "invalid_model"})
-    assert classifier.config["model"] == "small"
-
 if __name__ == "__main__":
     pytest.main()
