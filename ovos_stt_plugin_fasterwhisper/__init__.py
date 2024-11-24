@@ -1,3 +1,5 @@
+from typing import Tuple, List, Optional
+
 import numpy as np
 from faster_whisper import WhisperModel, decode_audio, available_models
 from ovos_plugin_manager.templates.stt import STT
@@ -8,63 +10,12 @@ from speech_recognition import AudioData
 
 class FasterWhisperLangClassifier(AudioLanguageDetector):
     def __init__(self, config=None):
-        config = config or {}
+        config = config or {"model": "small"}
         super().__init__("ovos-audio-transformer-plugin-fasterwhisper", 10, config)
-        model = self.config.get("model") or "small"
-        valid_model = model in FasterWhisperSTT.MODELS
-        if not valid_model:
-            LOG.info(f"{model} is not default model_id ({FasterWhisperSTT.MODELS}), "
-                     f"assuming huggingface repo_id or path to local model")
+        self.engine = FasterWhisperSTT(config=config)
 
-        self.compute_type = self.config.get("compute_type", "int8")
-        self.use_cuda = self.config.get("use_cuda", False)
-        self.beam_size = self.config.get("beam_size", 5)
-        self.cpu_threads = self.config.get("cpu_threads", 4)
-
-        if self.use_cuda:
-            device = "cuda"
-        else:
-            device = "cpu"
-        self.engine = WhisperModel(model, device=device, compute_type=self.compute_type)
-
-    @staticmethod
-    def audiochunk2array(audio_data: bytes):
-        # Convert buffer to float32 using NumPy
-        audio_as_np_int16 = np.frombuffer(audio_data, dtype=np.int16)
-        audio_as_np_float32 = audio_as_np_int16.astype(np.float32)
-
-        # Normalise float32 array so that values are between -1.0 and +1.0
-        max_int16 = 2 ** 15
-        data = audio_as_np_float32 / max_int16
-        return data
-
-    def detect(self, audio_data: bytes, valid_langs=None):
-        if isinstance(audio_data, AudioData):
-            audio_data = audio_data.get_wav_data()
-        valid_langs = [l.lower().split("-")[0] for l in valid_langs or self.valid_langs]
-        audio = self.audiochunk2array(audio_data)
-        if not self.engine.model.is_multilingual:
-            language = "en"
-            language_probability = 1
-        else:
-            sampling_rate = self.engine.feature_extractor.sampling_rate
-
-            if not isinstance(audio, np.ndarray):
-                audio = decode_audio(audio, sampling_rate=sampling_rate)
-
-            features = self.engine.feature_extractor(audio)
-
-            segment = features[:, : self.engine.feature_extractor.nb_max_frames]
-            encoder_output = self.engine.encode(segment)
-            results = self.engine.model.detect_language(encoder_output)[0]
-            results = [(l[2:-2], p) for l, p in results if l[2:-2] in valid_langs]
-            total = sum(l[1] for l in results) or 1
-            results = sorted(
-                [(l, p / total) for l, p in results], key=lambda k: k[1], reverse=True
-            )
-
-            language, language_probability = results[0]
-        return language, language_probability
+    def detect(self, audio_data: bytes, valid_langs=None) -> Tuple[str, float]:
+        return self.engine.detect_language(audio_data, valid_langs)
 
 
 class FasterWhisperSTT(STT):
@@ -199,9 +150,47 @@ class FasterWhisperSTT(STT):
         )
 
     @staticmethod
-    def audiodata2array(audio_data):
+    def audiodata2array(audio_data: AudioData):
         assert isinstance(audio_data, AudioData)
-        return FasterWhisperLangClassifier.audiochunk2array(audio_data.get_wav_data())
+        return FasterWhisperSTT.audiochunk2array(audio_data.get_wav_data())
+
+    @staticmethod
+    def audiochunk2array(audio_data: bytes):
+        # Convert buffer to float32 using NumPy
+        audio_as_np_int16 = np.frombuffer(audio_data, dtype=np.int16)
+        audio_as_np_float32 = audio_as_np_int16.astype(np.float32)
+
+        # Normalise float32 array so that values are between -1.0 and +1.0
+        max_int16 = 2 ** 15
+        data = audio_as_np_float32 / max_int16
+        return data
+
+    def detect_language(self, audio, valid_langs: Optional[List[str]] = None) -> Tuple[str, float]:
+        if isinstance(audio, AudioData):
+            audio = audio.get_wav_data()
+        valid_langs = [l.lower().split("-")[0]
+                       for l in valid_langs or self.available_languages]
+        audio = self.audiochunk2array(audio)
+        if not self.engine.model.is_multilingual:
+            language = "en"
+            language_probability = 1
+        else:
+            sampling_rate = self.engine.feature_extractor.sampling_rate
+            if not isinstance(audio, np.ndarray):
+                audio = decode_audio(audio, sampling_rate=sampling_rate)
+
+            features = self.engine.feature_extractor(audio)
+
+            segment = features[:, : self.engine.feature_extractor.nb_max_frames]
+            encoder_output = self.engine.encode(segment)
+            results = self.engine.model.detect_language(encoder_output)[0]
+            results = [(l[2:-2], p) for l, p in results if l[2:-2] in valid_langs]
+            total = sum(l[1] for l in results) or 1
+            results = sorted(
+                [(l, p / total) for l, p in results], key=lambda k: k[1], reverse=True
+            )
+            language, language_probability = results[0]
+        return language, language_probability
 
     def execute(self, audio, language=None):
         lang = language or self.lang
@@ -210,7 +199,7 @@ class FasterWhisperSTT(STT):
             beam_size=self.beam_size,
             condition_on_previous_text=False,
             language=lang.split("-")[0].lower(),
-            vad_filter = self.config.get("vad_filter", False)
+            vad_filter=self.config.get("vad_filter", False)
         )
         # segments is an iterator, transcription only happens here
         transcription = "".join(segment.text for segment in segments).strip()
