@@ -1,12 +1,12 @@
 # Changelog
 
-## [0.1.1a1](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/0.1.1a1) (2024-10-04)
+## [0.2.0a1](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/0.2.0a1) (2024-11-24)
 
-[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/0.1.0...0.1.1a1)
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/0.1.1...0.2.0a1)
 
 **Merged pull requests:**
 
-- default to faster whisper V3 turbo [\#15](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/pull/15) ([JarbasAl](https://github.com/JarbasAl))
+- feat: STT lang detector [\#18](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/pull/18) ([JarbasAl](https://github.com/JarbasAl))
 
 
 
