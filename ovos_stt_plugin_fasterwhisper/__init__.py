@@ -194,6 +194,8 @@ class FasterWhisperSTT(STT):
 
     def execute(self, audio, language=None):
         lang = language or self.lang
+        if lang == "auto":
+            lang, _ = self.detect_language(audio)
         segments, _ = self.engine.transcribe(
             self.audiodata2array(audio),
             beam_size=self.beam_size,
@@ -244,20 +246,28 @@ FasterWhisperSTTConfig = {
 }
 
 if __name__ == "__main__":
-    b = FasterWhisperSTT(config={"model": "projecte-aina/faster-whisper-large-v3-ca-3catparla"})
+    print(FasterWhisperSTT.MODELS)
+
+    b = FasterWhisperSTT(config={
+        "model": "turbo",
+        "use_cuda": True,
+        "compute_type": "float16",
+        "beam_size": 5,
+        "cpu_threads": 8
+    })
 
     from speech_recognition import Recognizer, AudioFile
 
-    jfk = "/home/miro/PycharmProjects/ovos-stt-plugin-vosk/example.wav"
+    jfk = "/home/miro/PycharmProjects/OVOS/STT/ovos-stt-plugin-fasterwhisper/jfk.wav"
     with AudioFile(jfk) as source:
         audio = Recognizer().record(source)
 
-    a = b.execute(audio, language="ca")
+    a = b.execute(audio, language="en")
     print(a)
     # And so, my fellow Americans, ask not what your country can do for you. Ask what you can do for your country.
+    print(b.detect_language(audio))
 
     l = FasterWhisperLangClassifier()
     lang, prob = l.detect(audio.get_wav_data(),
-                          valid_langs=["pt", "es", "ca", "gl"])
+                          valid_langs=["en", "pt", "es", "ca", "gl"])
     print(lang, prob)
-    # es 0.7143379217828251
