@@ -4,6 +4,7 @@ import numpy as np
 from faster_whisper import WhisperModel, decode_audio, available_models
 from ovos_plugin_manager.templates.stt import STT
 from ovos_plugin_manager.templates.transformers import AudioLanguageDetector
+from ovos_utils import classproperty
 from ovos_utils.log import LOG
 from speech_recognition import AudioData
 
@@ -207,8 +208,8 @@ class FasterWhisperSTT(STT):
         transcription = "".join(segment.text for segment in segments).strip()
         return transcription
 
-    @property
-    def available_languages(self) -> set:
+    @classproperty
+    def available_languages(cls) -> set:
         return set(FasterWhisperSTT.LANGUAGES.keys())
 
 
