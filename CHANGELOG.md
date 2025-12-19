@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.2a2](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/0.3.2a2) (2025-12-19)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/0.3.2a1...0.3.2a2)
+
+**Merged pull requests:**
+
+- chore\(deps\): update actions/setup-python action to v6 [\#30](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/pull/30) ([renovate[bot]](https://github.com/apps/renovate))
+
 ## [0.3.2a1](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/0.3.2a1) (2025-12-18)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/0.3.1...0.3.2a1)
