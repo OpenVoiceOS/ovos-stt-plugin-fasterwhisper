@@ -125,7 +125,7 @@ class FasterWhisperSTT(STT):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        model = self.config.get("model") or "whisper-large-v3-turbo"
+        model = self.config.get("model") or "large-v3-turbo"
         valid_model = model in FasterWhisperSTT.MODELS
         if not valid_model:
             LOG.info(f"{model} is not default model_id ({FasterWhisperSTT.MODELS}), "
