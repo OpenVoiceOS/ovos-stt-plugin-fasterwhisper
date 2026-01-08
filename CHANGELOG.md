@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.0a1](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/0.4.0a1) (2026-01-08)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/0.3.2a4...0.4.0a1)
+
+**Merged pull requests:**
+
+- feat: modernize [\#35](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/pull/35) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.3.2a4](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/0.3.2a4) (2025-12-20)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/0.3.2a3...0.3.2a4)
