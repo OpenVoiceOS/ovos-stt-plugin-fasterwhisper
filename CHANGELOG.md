@@ -1,12 +1,52 @@
 # Changelog
 
-## [0.3.1a1](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/0.3.1a1) (2025-06-08)
+## [0.4.0a3](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/0.4.0a3) (2026-01-08)
 
-[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/0.3.0...0.3.1a1)
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/0.4.0a1...0.4.0a3)
 
 **Merged pull requests:**
 
-- fix: compatibility with ovos-plugin-manager 1.X.X [\#22](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/pull/22) ([JarbasAl](https://github.com/JarbasAl))
+- chore\(deps\): update actions/checkout action to v6 - autoclosed [\#27](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/pull/27) ([renovate[bot]](https://github.com/apps/renovate))
+
+## [0.4.0a1](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/0.4.0a1) (2026-01-08)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/0.3.2a4...0.4.0a1)
+
+**Merged pull requests:**
+
+- feat: modernize [\#35](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/pull/35) ([JarbasAl](https://github.com/JarbasAl))
+
+## [0.3.2a4](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/0.3.2a4) (2025-12-20)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/0.3.2a3...0.3.2a4)
+
+**Merged pull requests:**
+
+- chore\(deps\): update dependency ovos-plugin-manager to v2 [\#33](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/pull/33) ([renovate[bot]](https://github.com/apps/renovate))
+
+## [0.3.2a3](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/0.3.2a3) (2025-12-19)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/0.3.2a2...0.3.2a3)
+
+**Merged pull requests:**
+
+- chore\(deps\): update dependency python to 3.14 [\#26](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/pull/26) ([renovate[bot]](https://github.com/apps/renovate))
+
+## [0.3.2a2](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/0.3.2a2) (2025-12-19)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/0.3.2a1...0.3.2a2)
+
+**Merged pull requests:**
+
+- chore\(deps\): update actions/setup-python action to v6 [\#30](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/pull/30) ([renovate[bot]](https://github.com/apps/renovate))
+
+## [0.3.2a1](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/0.3.2a1) (2025-12-18)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/0.3.1...0.3.2a1)
+
+**Merged pull requests:**
+
+- chore: Configure Renovate [\#25](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/pull/25) ([renovate[bot]](https://github.com/apps/renovate))
 
 
 
