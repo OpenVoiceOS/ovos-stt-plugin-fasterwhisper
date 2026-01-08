@@ -125,14 +125,11 @@ class FasterWhisperSTT(STT):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        model = self.config.get("model") or "whisper-large-v3-turbo"
-        if model == "whisper-large-v3-turbo":
-            model = "deepdml/faster-whisper-large-v3-turbo-ct2"
-        else:
-            valid_model = model in FasterWhisperSTT.MODELS
-            if not valid_model:
-                LOG.info(f"{model} is not default model_id ({FasterWhisperSTT.MODELS}), "
-                         f"assuming huggingface repo_id or path to local model")
+        model = self.config.get("model") or "large-v3-turbo"
+        valid_model = model in FasterWhisperSTT.MODELS
+        if not valid_model:
+            LOG.info(f"{model} is not default model_id ({FasterWhisperSTT.MODELS}), "
+                     f"assuming huggingface repo_id or path to local model")
 
         self.beam_size = self.config.get("beam_size", 5)
         self.compute_type = self.config.get("compute_type", "int8")
@@ -210,40 +207,20 @@ class FasterWhisperSTT(STT):
 
     @classproperty
     def available_languages(cls) -> set:
-        return set(FasterWhisperSTT.LANGUAGES.keys())
+        return set(cls.LANGUAGES.keys())
 
 
 FasterWhisperSTTConfig = {
-    lang: [
-        {
-            "model": "tiny",
-            "lang": lang,
-            "meta": {
-                "priority": 50,
-                "display_name": "FasterWhisper (Tiny)",
-                "offline": True,
-            },
+    lang: [{
+        "model": model,
+        "lang": lang,
+        "meta": {
+            "priority": 50,
+            "display_name": f"FasterWhisper ({model})",
+            "offline": True,
         },
-        {
-            "model": "base",
-            "lang": lang,
-            "meta": {
-                "priority": 55,
-                "display_name": f"FasterWhisper (Base)",
-                "offline": True,
-            },
-        },
-        {
-            "model": "small",
-            "lang": lang,
-            "meta": {
-                "priority": 60,
-                "display_name": f"FasterWhisper (Small)",
-                "offline": True,
-            },
-        },
-    ]
-    for lang, lang_name in FasterWhisperSTT.LANGUAGES.items()
+    } for model in FasterWhisperSTT.MODELS]
+    for lang in FasterWhisperSTT.available_languages
 }
 
 if __name__ == "__main__":
@@ -259,7 +236,7 @@ if __name__ == "__main__":
 
     from speech_recognition import Recognizer, AudioFile
 
-    jfk = "/home/miro/PycharmProjects/OVOS/STT/ovos-stt-plugin-fasterwhisper/jfk.wav"
+    jfk = "jfk.wav"
     with AudioFile(jfk) as source:
         audio = Recognizer().record(source)
 
