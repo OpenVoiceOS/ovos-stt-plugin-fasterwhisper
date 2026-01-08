@@ -82,8 +82,8 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
     ],
-    keywords='mycroft ovos plugin stt',
-    entry_points={'mycroft.plugin.stt': PLUGIN_ENTRY_POINT,
-                  'mycroft.plugin.stt.config': CONFIG_ENTRY_POINT,
-                  'neon.plugin.audio': LANG_PLUGIN_ENTRY_POINT}
+    keywords='OpenVoiceOS mycroft ovos plugin stt',
+    entry_points={'opm.stt': PLUGIN_ENTRY_POINT,
+                  'opm.stt.config': CONFIG_ENTRY_POINT,
+                  'opm.transformer.audio': LANG_PLUGIN_ENTRY_POINT}
 )
