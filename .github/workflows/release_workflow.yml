@@ -1,13 +1,13 @@
 name: Release Alpha and Propose Stable
 
 on:
+  workflow_dispatch:
   pull_request:
     types: [closed]
     branches: [dev]
 
 jobs:
   publish_alpha:
-    if: github.event.pull_request.merged == true
     uses: TigreGotico/gh-automations/.github/workflows/publish-alpha.yml@master
     secrets: inherit
     with:
@@ -46,7 +46,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v6
         with:
-          python-version: 3.14
+          python-version: "3.11"
       - name: Install Build Tools
         run: |
           python -m pip install build wheel
@@ -75,7 +75,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.14'
+          python-version: "3.11"
 
       - name: Get version from setup.py
         id: get_version
