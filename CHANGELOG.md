@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.0a3](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/0.4.0a3) (2026-01-08)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/0.4.0a1...0.4.0a3)
+
+**Merged pull requests:**
+
+- chore\(deps\): update actions/checkout action to v6 - autoclosed [\#27](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/pull/27) ([renovate[bot]](https://github.com/apps/renovate))
+
 ## [0.4.0a1](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/0.4.0a1) (2026-01-08)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/0.3.2a4...0.4.0a1)
