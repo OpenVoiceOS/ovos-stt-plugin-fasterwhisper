@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.1a3](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/0.4.1a3) (2026-06-07)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/0.4.1a1...0.4.1a3)
+
+**Closed issues:**
+
+- requesting tiny.en in mycroft.conf downloads models--mobiuslabsgmbh--faster-whisper-large-v3-turbo [\#42](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/issues/42)
+
 ## [0.4.1a1](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/0.4.1a1) (2026-01-09)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/0.4.0...0.4.1a1)
