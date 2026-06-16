@@ -1,12 +1,12 @@
 # Changelog
 
-## [0.4.1a4](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/0.4.1a4) (2026-06-16)
+## [0.4.1a5](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/0.4.1a5) (2026-06-16)
 
-[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/0.4.1a1...0.4.1a4)
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/compare/0.4.1a1...0.4.1a5)
 
-**Closed issues:**
+**Merged pull requests:**
 
-- requesting tiny.en in mycroft.conf downloads models--mobiuslabsgmbh--faster-whisper-large-v3-turbo [\#42](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/issues/42)
+- chore: add missing shared CI workflows [\#47](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/pull/47) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [0.4.1a1](https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper/tree/0.4.1a1) (2026-01-09)
 
