@@ -2,6 +2,8 @@ import numpy as np
 import pytest
 from speech_recognition import AudioFile, Recognizer
 
+from ovos_plugin_manager.utils.audio import AudioData
+
 from ovos_stt_plugin_fasterwhisper import FasterWhisperLangClassifier, FasterWhisperSTT
 
 
@@ -34,17 +36,23 @@ def test_faster_whisper_lang_classifier_detect(audio_data):
     assert 0.0 <= probability <= 1.0
 
 
-def test_faster_whisper_lang_classifier_audiochunk2array():
-    audio_data = b"\x00\x01\x02\x03"
-    array = FasterWhisperSTT.audiochunk2array(audio_data)
+def test_audiochunk2array():
+    # raw PCM chunk: 2 int16 samples (sample_width=2)
+    chunk = b"\x00\x01\x02\x03"
+    array = AudioData(chunk, sample_rate=16000, sample_width=2).get_np_float32()
     assert isinstance(array, np.ndarray)
     assert array.dtype == np.float32
+    assert len(array) == 2
+    # values normalised to [-1.0, 1.0]
+    assert np.all(np.abs(array) <= 1.0)
 
 
-def test_faster_whisper_stt_audiodata2array(audio_data):
-    array = FasterWhisperSTT.audiodata2array(audio_data)
+def test_audiodata2array(audio_data):
+    array = audio_data.get_np_float32()
     assert isinstance(array, np.ndarray)
     assert array.dtype == np.float32
+    assert len(array) > 0
+    assert np.all(np.abs(array) <= 1.0)
 
 
 if __name__ == "__main__":
