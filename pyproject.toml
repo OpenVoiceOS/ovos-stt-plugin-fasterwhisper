@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ovos-stt-plugin-fasterwhisper"
+dynamic = ["version"]
+description = "A fasterwhisper stt plugin for mycroft"
+readme = "README.md"
+license = {text = "Apache-2.0"}
+authors = [{name = "JarbasAi", email = "jarbasai@mailfence.com"}]
+keywords = ["OpenVoiceOS", "mycroft", "ovos", "plugin", "stt"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+]
+dependencies = [
+    "ovos-plugin-manager>=2.1.1,<3.0.0",
+    "ovos-utils>=0.8.4,<1.0.0",
+    "faster-whisper>=0.10.0",
+    "requests",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "numpy",
+    "SpeechRecognition",
+]
+
+[project.urls]
+Homepage = "https://github.com/OpenVoiceOS/ovos-stt-plugin-fasterwhisper"
+
+[project.entry-points."opm.stt"]
+"ovos-stt-plugin-fasterwhisper" = "ovos_stt_plugin_fasterwhisper:FasterWhisperSTT"
+
+[project.entry-points."opm.stt.config"]
+"ovos-stt-plugin-fasterwhisper.config" = "ovos_stt_plugin_fasterwhisper:FasterWhisperSTTConfig"
+
+[project.entry-points."opm.transformer.audio"]
+"ovos-audio-transformer-plugin-fasterwhisper" = "ovos_stt_plugin_fasterwhisper:FasterWhisperLangClassifier"
+
+[tool.setuptools.dynamic]
+version = {attr = "ovos_stt_plugin_fasterwhisper.version.__version__"}
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["ovos_stt_plugin_fasterwhisper*"]
+
+[tool.setuptools.package-data]
+ovos_stt_plugin_fasterwhisper = ["*.json", "locale/**/*"]
