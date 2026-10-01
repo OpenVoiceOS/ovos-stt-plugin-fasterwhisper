@@ -4,6 +4,7 @@ from faster_whisper import WhisperModel, available_models
 from ovos_plugin_manager.templates.stt import STT
 from ovos_plugin_manager.templates.transformers import AudioLanguageDetector
 from ovos_plugin_manager.utils.audio import AudioData, AudioFile
+from ovos_config import Configuration
 from ovos_utils import classproperty
 from ovos_utils.log import LOG
 
@@ -171,10 +172,29 @@ class FasterWhisperSTT(STT):
             language, language_probability = results[0]
         return language, language_probability
 
+    @property
+    def valid_langs(self) -> List[str]:
+        """The languages this box is configured for: primary plus secondary.
+
+        The same set `AudioLanguageDetector.valid_langs` builds. Auto-detect
+        chooses from these; without them the callee falls back to every
+        language Whisper knows.
+        """
+        cfg = Configuration()
+        # NOT self.lang: in this path it is the literal "auto", which is what
+        # asked for detection in the first place. The primary is the box's
+        # configured language, the same source AudioLanguageDetector uses.
+        primary = cfg.get("lang") or "en-US"
+        return list(set([primary] + (cfg.get("secondary_langs") or [])))
+
     def execute(self, audio: AudioData, language=None):
         lang = language or self.lang
         if lang == "auto":
-            lang, _ = self.detect_language(audio)
+            # Restrict to the configured languages. Unrestricted, the callee
+            # falls back to all of `available_languages`, so a short utterance
+            # on a two-language box is classified against every language the
+            # model knows.
+            lang, _ = self.detect_language(audio, self.valid_langs)
         segments, _ = self.engine.transcribe(
             audio.get_np_float32(self.engine.feature_extractor.sampling_rate),
             beam_size=self.beam_size,
